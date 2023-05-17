@@ -34,7 +34,9 @@ router.post("/", async (req, res, next) => {
   try {
     const { error } = addSchema.validate(req.body);
     if (error) {
-      return res.status(400).json({ message: "missing required name field" });
+      return res.status(400).json({
+        message: "missing " + error.details[0].message + " field",
+      });
     }
     const result = await contacts.addContact(req.body);
     res.status(201).json(result);
@@ -54,8 +56,8 @@ router.delete("/:contactId", async (req, res, next) => {
 
 router.put("/:contactId", async (req, res, next) => {
   try {
-    const { error } = addSchema.validate(req.body);
-    if (error) {
+    const bodyEmpty = Object.keys(req.body).length === 0;
+    if (bodyEmpty) {
       return res.status(400).json({ message: "missing fields" });
     }
     const { contactId } = req.params;

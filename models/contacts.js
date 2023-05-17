@@ -56,7 +56,22 @@ const updateContact = async (contactId, body) => {
     if (index === -1) {
       return null;
     }
-    contacts[index] = { id: contactId, ...body };
+    contacts[index] = {
+      id: contactId,
+      name:
+        body.name !== undefined && body.name.trim().length > 0
+          ? body.name
+          : contacts[index].name,
+      email:
+        body.email !== undefined && body.email.trim().length > 0
+          ? body.email
+          : contacts[index].email,
+      phone:
+        body.phone !== undefined && body.phone.trim().length > 0
+          ? body.phone
+          : contacts[index].phone,
+    };
+
     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
     return contacts[index];
   } catch (error) {
